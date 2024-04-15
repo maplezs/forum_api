@@ -84,11 +84,13 @@ describe('CommentRepositoryPostgres', () => {
       expect(comments[0].username).toStrictEqual('johndoe')
       expect(comments[0].date.getMinutes()).toStrictEqual(new Date().getMinutes())
       expect(comments[0].content).toStrictEqual('new comment')
+      expect(comments[0].isDeleted).toStrictEqual(false)
 
       expect(comments[1].id).toStrictEqual('comment-12346')
       expect(comments[1].username).toStrictEqual('marydoe')
       expect(comments[1].date.getMinutes()).toStrictEqual(new Date().getMinutes())
       expect(comments[1].content).toStrictEqual('new comment')
+      expect(comments[1].isDeleted).toStrictEqual(false)
     })
   })
 

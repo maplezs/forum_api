@@ -75,11 +75,15 @@ describe('ReplyRepositoryPostgres', () => {
       expect(replies[0].username).toStrictEqual('johndoe')
       expect(replies[0].date.getMinutes()).toStrictEqual(new Date().getMinutes())
       expect(replies[0].content).toStrictEqual('new reply')
+      expect(replies[0].commentId).toStrictEqual('comment-12345')
+      expect(replies[0].isDeleted).toStrictEqual(false)
 
       expect(replies[1].id).toStrictEqual('reply-12346')
       expect(replies[1].username).toStrictEqual('marydoe')
       expect(replies[1].date.getMinutes()).toStrictEqual(new Date().getMinutes())
       expect(replies[1].content).toStrictEqual('new reply')
+      expect(replies[1].commentId).toStrictEqual('comment-12345')
+      expect(replies[1].isDeleted).toStrictEqual(false)
     })
     it('should return empty replies when no reply is found', async () => {
       // Arrange

@@ -200,6 +200,31 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(responseJson.status).toEqual('success')
     })
 
+    it('should response 404 when thread is not found', async () => {
+      const loginResponse = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: {
+          username: 'johndoe',
+          password: 'secret'
+        }
+      })
+      const { data: { accessToken } } = JSON.parse(loginResponse.payload)
+
+      const response = await server.inject({
+        method: 'DELETE',
+        url: '/threads/thread-12345/comments/comment-12347',
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(404)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('thread id tidak ditemukan')
+    })
+
     it('should response 404 when comment is not found', async () => {
       const loginResponse = await server.inject({
         method: 'POST',
@@ -210,6 +235,8 @@ describe('/threads/{threadId}/comments endpoint', () => {
         }
       })
       const { data: { accessToken } } = JSON.parse(loginResponse.payload)
+      const { data: { addedUser } } = JSON.parse(user.payload)
+      await ThreadsTableTestHelper.addThread({ owner: addedUser.id })
 
       const response = await server.inject({
         method: 'DELETE',

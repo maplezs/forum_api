@@ -10,6 +10,7 @@ class GetThreadDetailUseCase {
   }
 
   async execute (useCasePayload) {
+    await this._threadRepository.verifyThreadAvailability(useCasePayload)
     const threadData = await this._threadRepository.getThreadById(useCasePayload)
     const thread = new ThreadDetail({
       id: threadData.id,

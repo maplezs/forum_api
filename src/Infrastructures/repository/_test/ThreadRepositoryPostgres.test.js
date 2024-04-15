@@ -17,9 +17,6 @@ describe('ThreadRepositoryPostgres', () => {
   })
 
   describe('addThread function', () => {
-    // beforeEach(async () => {
-    //   await UsersTableTestHelper.addUser({ id: 'user-12345', username: 'johndoe' })
-    // })
     it('should persist add thread and return added thread correctly', async () => {
       // Arrange
       const addThread = new AddThread({
@@ -58,16 +55,6 @@ describe('ThreadRepositoryPostgres', () => {
   })
 
   describe('getThread function', () => {
-    it('should throw NotFoundError when thread not found', () => {
-      // Arrange
-      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
-
-      // Action & Assert
-      return expect(threadRepositoryPostgres.getThreadById('thread-12345'))
-        .rejects
-        .toThrowError(NotFoundError)
-    })
-
     it('should return thread when thread id is found', async () => {
       // Arrange
       const fakeIdGenerator = () => '12345'
@@ -82,6 +69,28 @@ describe('ThreadRepositoryPostgres', () => {
       expect(thread.body).toBe('new body of thread')
       expect(thread.date.getMinutes()).toBe(new Date().getMinutes())
       expect(thread.username).toBe('johndoe')
+    })
+  })
+
+  describe('verifyThreadAvailability function', () => {
+    it('should throw NotFoundError when thread is not found', () => {
+      // Arrange
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
+
+      // Action & Assert
+      return expect(threadRepositoryPostgres.verifyThreadAvailability('thread-12345'))
+        .rejects
+        .toThrowError(NotFoundError)
+    })
+    it('should not throw any error when thread exist', async () => {
+      // Arrange
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
+      await UsersTableTestHelper.addUser({ id: 'user-12345', username: 'johndoe' })
+      await ThreadTableTestHelper.addThread({})
+
+      // Action & Assert
+      return expect(threadRepositoryPostgres.verifyThreadAvailability('thread-12345'))
+        .resolves.not.toThrowError()
     })
   })
 })

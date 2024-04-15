@@ -20,8 +20,7 @@ describe('GetThreadDetailUseCase', () => {
       title: 'new title',
       body: 'this is a body of the thread',
       date: new Date().toISOString(),
-      username: 'johndoe',
-      comments: []
+      username: 'johndoe'
     }
 
     const mockCommentDetail = [
@@ -30,7 +29,6 @@ describe('GetThreadDetailUseCase', () => {
         username: 'user-12345',
         date: new Date().toISOString(),
         content: 'new comment 1',
-        replies: [],
         isDeleted: false
       },
       // deleted comment
@@ -39,7 +37,6 @@ describe('GetThreadDetailUseCase', () => {
         username: 'user-123456',
         date: new Date().toISOString(),
         content: 'new comment 2',
-        replies: [],
         isDeleted: true
       }
     ]
@@ -76,6 +73,9 @@ describe('GetThreadDetailUseCase', () => {
     const mockCommentRepository = new CommentRepository()
     const mockReplyRepository = new ReplyRepository()
     /** mocking needed function */
+    mockThreadRepository.verifyThreadAvailability = jest.fn()
+      .mockImplementation(() => Promise.resolve())
+
     mockThreadRepository.getThreadById = jest.fn()
       .mockImplementation(() => Promise.resolve(mockThreadDetail))
 
@@ -148,6 +148,7 @@ describe('GetThreadDetailUseCase', () => {
       })
     )
 
+    expect(mockThreadRepository.verifyThreadAvailability).toBeCalledWith(useCasePayload)
     expect(mockThreadRepository.getThreadById).toBeCalledWith(useCasePayload)
     expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(useCasePayload)
     expect(mockReplyRepository.getRepliesByCommentId).toBeCalledWith(['comment-12345', 'comment-123456'])

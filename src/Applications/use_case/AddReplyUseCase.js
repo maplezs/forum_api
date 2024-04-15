@@ -8,7 +8,7 @@ class AddReplyUseCase {
   }
 
   async execute (threadId, commentId, owner, useCasePayload) {
-    await this._threadRepository.getThreadById(threadId)
+    await this._threadRepository.verifyThreadAvailability(threadId)
     await this._commentRepository.verifyCommentAvailability(commentId, threadId)
     const addReply = new AddReply(useCasePayload)
     return this._replyRepository.addReply(addReply, commentId, owner)
