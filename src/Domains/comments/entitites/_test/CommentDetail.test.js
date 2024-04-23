@@ -17,6 +17,7 @@ describe('Comment Detail entities ', () => {
       date: new Date().toISOString(),
       content: 12345,
       replies: '[]',
+      likeCount: 'abc',
       isDeleted: false
     }
     expect(() => new CommentDetail(payload)).toThrowError('COMMENT_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION')
@@ -29,6 +30,7 @@ describe('Comment Detail entities ', () => {
       date: new Date().toISOString(),
       content: 'new comment',
       replies: [],
+      likeCount: 0,
       isDeleted: false
     }
 
@@ -39,6 +41,7 @@ describe('Comment Detail entities ', () => {
     expect(commentDetail.date).toEqual(payload.date)
     expect(commentDetail.content).toEqual(payload.content)
     expect(commentDetail.replies).toEqual(payload.replies)
+    expect(commentDetail.likeCount).toEqual(payload.likeCount)
     expect(commentDetail.isDeleted).toEqual(payload.isDeleted)
   })
 
@@ -49,6 +52,7 @@ describe('Comment Detail entities ', () => {
       date: new Date().toISOString(),
       content: 'new comment',
       replies: [],
+      likeCount: 0,
       isDeleted: true
     }
 
@@ -59,6 +63,7 @@ describe('Comment Detail entities ', () => {
     expect(commentDetail.date).toEqual(payload.date)
     expect(commentDetail.content).toEqual('**komentar telah dihapus**')
     expect(commentDetail.replies).toEqual(payload.replies)
+    expect(commentDetail.likeCount).toEqual(payload.likeCount)
     expect(commentDetail.isDeleted).toEqual(payload.isDeleted)
   })
 })

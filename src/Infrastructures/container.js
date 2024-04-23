@@ -24,6 +24,9 @@ const CommentRepositoryPostgres = require('./repository/CommentRepositoryPostgre
 const ReplyRepository = require('../Domains/replies/ReplyRepository')
 const ReplyRepositoryPostgres = require('./repository/ReplyRepositoryPostgres')
 
+const LikeRepository = require('../Domains/likes/LikeRepository')
+const LikeRepositoryPostgres = require('./repository/LikeRepositoryPostgres')
+
 const PasswordHash = require('../Applications/security/PasswordHash')
 
 const BcryptPasswordHash = require('./security/BcryptPasswordHash')
@@ -41,6 +44,8 @@ const DeleteCommentUseCase = require('../Applications/use_case/DeleteCommentUseC
 
 const AddReplyUseCase = require('../Applications/use_case/AddReplyUseCase')
 const DeleteReplyUseCase = require('../Applications/use_case/DeleteReplyUseCase')
+
+const LikeDislikeCommentUseCase = require('../Applications/use_case/LikeDislikeCommentUseCase')
 
 const AuthenticationTokenManager = require('../Applications/security/AuthenticationTokenManager')
 const JwtTokenManager = require('./security/JwtTokenManager')
@@ -107,6 +112,20 @@ container.register([
   {
     key: ReplyRepository.name,
     Class: ReplyRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool
+        },
+        {
+          concrete: nanoid
+        }
+      ]
+    }
+  },
+  {
+    key: LikeRepository.name,
+    Class: LikeRepositoryPostgres,
     parameter: {
       dependencies: [
         {
@@ -325,6 +344,27 @@ container.register([
         {
           name: 'replyRepository',
           internal: ReplyRepository.name
+        }
+      ]
+    }
+  },
+  {
+    key: LikeDislikeCommentUseCase.name,
+    Class: LikeDislikeCommentUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name
+        },
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name
+        },
+        {
+          name: 'likeRepository',
+          internal: LikeRepository.name
         }
       ]
     }

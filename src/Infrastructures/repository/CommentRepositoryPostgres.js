@@ -18,20 +18,16 @@ class CommentRepositoryPostgres extends CommentRepository {
       values: [id, threadId, owner, content]
     }
     const result = await this._pool.query(query)
-    return new AddedComment({ ...result.rows[0] })
+    return new AddedComment(result.rows[0])
   }
 
   async getCommentsByThreadId (threadId) {
     const query = {
-      text: 'SELECT comments.id, users.username, comments.date, comments.content, comments.is_deleted AS "isDeleted" FROM threads_comments AS comments LEFT JOIN users ON comments.owner = users.id WHERE comments.thread_id = $1 GROUP BY comments.id, users.username ORDER BY comments.date',
+      text: 'SELECT comments.id, users.username, comments.date, comments.content, COUNT(likes.comment_id) AS "likeCount", comments.is_deleted AS "isDeleted" FROM threads_comments AS comments LEFT JOIN users ON comments.owner = users.id LEFT JOIN comments_likes as likes ON comments.id = likes.comment_id WHERE comments.thread_id = $1 GROUP BY comments.id, users.username ORDER BY comments.date',
       values: [threadId]
     }
 
     const result = await this._pool.query(query)
-
-    if (!result.rowCount) {
-      throw new NotFoundError('thread id tidak ditemukan')
-    }
     return result.rows
   }
 

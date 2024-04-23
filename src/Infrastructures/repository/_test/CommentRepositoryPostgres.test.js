@@ -58,16 +58,6 @@ describe('CommentRepositoryPostgres', () => {
   })
 
   describe('getCommentsByThreadId function', () => {
-    it('should throw NotFoundError when thread not found', () => {
-      // Arrange
-      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
-
-      // Action & Assert
-      return expect(commentRepositoryPostgres.getCommentsByThreadId('thread-12345'))
-        .rejects
-        .toThrowError(NotFoundError)
-    })
-
     it('should return comments when thread id is found', async () => {
       // Arrange
       const fakeIdGenerator = () => '12345'

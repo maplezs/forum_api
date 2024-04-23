@@ -30,6 +30,7 @@ class GetThreadDetailUseCase {
         date: new Date(comment.date).toISOString(),
         content: comment.content,
         replies: [],
+        likeCount: +comment.likeCount,
         isDeleted: comment.isDeleted
       })
     )

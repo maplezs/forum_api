@@ -2,7 +2,7 @@ class CommentDetail {
   constructor (payload) {
     this._verifyPayload(payload)
 
-    const { id, username, date, content, replies, isDeleted } = payload
+    const { id, username, date, content, replies, isDeleted, likeCount } = payload
 
     this.id = id
     this.username = username
@@ -10,10 +10,11 @@ class CommentDetail {
     this.content = isDeleted ? '**komentar telah dihapus**' : content
     this.replies = replies
     this.isDeleted = isDeleted
+    this.likeCount = likeCount
   }
 
-  _verifyPayload ({ id, username, date, content, replies, isDeleted }) {
-    if (!id || !username || !date || !content || !replies || isDeleted === undefined) {
+  _verifyPayload ({ id, username, date, content, replies, isDeleted, likeCount }) {
+    if (!id || !username || !date || !content || !replies || isDeleted === undefined || likeCount === undefined) {
       throw new Error('COMMENT_DETAIL.NOT_CONTAIN_NEEDED_PROPERTY')
     }
 
@@ -22,7 +23,8 @@ class CommentDetail {
             typeof date !== 'string' ||
             !Array.isArray(replies) ||
             typeof content !== 'string' ||
-            typeof isDeleted !== 'boolean') {
+            typeof isDeleted !== 'boolean' ||
+            typeof likeCount !== 'number') {
       throw new Error('COMMENT_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION')
     }
   }
